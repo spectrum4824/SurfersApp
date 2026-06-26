@@ -1,17 +1,51 @@
-<h2>Регистрация</h2>
+<h2>Регистрация нового пользователя</h2>
 <form>
   <div>
-    <label>Имя:</label>
+    <label>Никнейм*:</label>
     <input type="text" placeholder="Введите имя">
   </div>
   <div>
-    <label>Email:</label>
+    <label>Почта*:</label>
     <input type="email" placeholder="Введите email">
   </div>
   <div>
-    <label>Пароль:</label>
+    <label>Пароль*:</label>
     <input type="password" placeholder="Введите пароль">
   </div>
-  <button type="submit">Зарегистрироваться</button>
+  <div>
+    <label>Подтвердите пароль*:</label>
+    <input type="password" placeholder="Введите пароль">
+  </div>
+  <div>
+    <label>Фамилия:</label>
+    <input type="password" placeholder="Введите пароль">
+  </div>
+  <div>
+    <label>Имя:</label>
+    <input type="password" placeholder="Введите пароль">
+  </div>
+  <div>
+    <label>Контактная информация:</label>
+    <input type="password" placeholder="Введите пароль">
+  </div>
+  <div>
+    <label>О себе:</label>
+    <input type="password" placeholder="Введите пароль">
+  </div>
+  <div>
+    <label>Достижения:</label>
+    <input type="password" placeholder="Введите пароль">
+  </div>
+  
+  <button type="submit" style="background: #E2F6FF; color: #5D98DE; border: 4px solid #8fbdf5; padding: 16px 60px; font-size: 18px; font-weight: 600; cursor: pointer; letter-spacing: 1px;">
+    Зарегистрироваться
+  </button>
+
 </form>
-<p>Уже есть аккаунт? <a routerLink="/login">Войти</a></p>
+
+<div style="display: flex; justify-content: center; align-items: center; gap: 15px;">
+    <span style="font-size: 18px; color: #555;">Уже есть аккаунт?</span>
+    <a routerLink="/registration" style="background: #E2F6FF; color: #5D98DE; border: 4px solid #8fbdf5; padding: 12px 35px; font-size: 18px; font-weight: 600; cursor: pointer; text-decoration: none; display: inline-block;">
+      Войти
+    </a>
+</div>

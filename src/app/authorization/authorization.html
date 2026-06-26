@@ -1,17 +1,40 @@
-<h2>Авторизация</h2>
-<form>
-  <div style="display: flex; flex-direction: column;gap: 5px;">
-    <label>Никнейм/Почта*</label>
-    <input type="email">
+
+<div style="display: flex; justify-content: center; align-items: center; min-height: 100vh; background: #e6f0fa;">
+
+  <div style="width: 923px; height: 1089px; background: white; box-shadow: 0 4px 12px rgba(255, 255, 255, 0.959); display: flex; flex-direction: column; overflow: hidden; margin-top: 200px;">
+
+    <div style="background: #E2F6FF; padding: 30px 40px; flex-shrink: 0;">
+      <h2 style="margin: 0; color: #2c3e50; font-size: 28px; font-weight: 200; text-align: center;">Авторизация</h2>
+    </div>
+
+    <div style="padding: 50px 60px; flex: 1; display: flex; flex-direction: column;">
+
+      <div style="margin-bottom: 25px;">
+        <label style="display: block; font-size: 18px; font-weight: 500; margin-bottom: 8px; color: #333;">Никнейм/Почта*</label>
+        <input type="email" placeholder="Введите email" style="width: 100%; padding: 15px 18px; font-size: 16px; border: 1px solid #ccc; border-radius: 12px; box-sizing: border-box; outline: none;">
+      </div>
+
+      <div style="margin-bottom: 100px;">
+        <label style="display: block; font-size: 18px; font-weight: 500; margin-bottom: 8px; color: #333;">Пароль*</label>
+        <input type="password" placeholder="Введите пароль" style="width: 100%; padding: 15px 18px; font-size: 16px; border: 1px solid #ccc; border-radius: 12px; box-sizing: border-box; outline: none;">
+      </div>
+
+      <div style="margin-bottom: 30px;">
+        <span style="font-size: 16px; color: #888; font-weight: 400;">*поля обязательные для заполнения</span>
+      </div>
+
+      <div style="display: flex; justify-content: center; margin-bottom: 400px;">
+        <button type="submit" style="background: #E2F6FF; color: #5D98DE; border: 4px solid #8fbdf5; padding: 16px 60px; font-size: 18px; font-weight: 600; cursor: pointer; letter-spacing: 1px;">
+          Войти
+        </button>
+      </div>
+
+      <div style="display: flex; justify-content: center; align-items: center; gap: 15px;">
+        <span style="font-size: 18px; color: #555;">Ещё нет аккаунта?</span>
+        <a routerLink="/registration" style="background: #E2F6FF; color: #5D98DE; border: 4px solid #8fbdf5; padding: 12px 35px; font-size: 18px; font-weight: 600; cursor: pointer; text-decoration: none; display: inline-block;">
+          Зарегистрироваться
+        </a>
+      </div>
+    </div>
   </div>
-  <div style="display: flex; flex-direction: column;gap: 5px;">
-    <label>Пароль*</label>
-    <input type="password">
-  </div>
-  <button type="submit" style="background: #E2F6FF; margin-top: 15px; color: #5D98DE; border: 2px solid #5D98DE; padding: 10px 20px; cursor: pointer;">Войти</button>
-</form>
-<p>Ещё нет аккаунта? 
-  <button type="button" routerLink="/register" style="background: #E2F6FF; color: #5D98DE; border: 2px solid #5D98DE; padding: 10px 20px; cursor: pointer;">
-  Зарегистрироваться
-  </button>
-</p>
+</div>
