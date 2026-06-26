@@ -1,13 +1,17 @@
-<h2>Вход</h2>
+<h2>Авторизация</h2>
 <form>
-  <div>
+  <div style="display: flex; flex-direction: column;gap: 5px;">
     <label>Никнейм/Почта*</label>
-    <input type="email" placeholder="Введите email">
+    <input type="email">
   </div>
-  <div>
+  <div style="display: flex; flex-direction: column;gap: 5px;">
     <label>Пароль*</label>
-    <input type="password" placeholder="Введите пароль">
+    <input type="password">
   </div>
-  <button type="submit">Войти</button>
+  <button type="submit" style="background: #E2F6FF; margin-top: 15px; color: #5D98DE; border: 2px solid #5D98DE; padding: 10px 20px; cursor: pointer;">Войти</button>
 </form>
-<p>Ещё нет аккаунта? <button type="submit">Зарегистрироваться</button></p>
+<p>Ещё нет аккаунта? 
+  <button type="button" routerLink="/register" style="background: #E2F6FF; color: #5D98DE; border: 2px solid #5D98DE; padding: 10px 20px; cursor: pointer;">
+  Зарегистрироваться
+  </button>
+</p>
