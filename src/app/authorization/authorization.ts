@@ -12,25 +12,59 @@ import { FormsModule } from '@angular/forms';
 export class Authorization {
   nickname: string = '';
   password: string = '';
-  isPasswordValid: boolean = false;
+  
+  // Флаги для отображения ошибок
+  showEmptyFieldsError: boolean = false;
+  showPasswordError: boolean = false;
 
   constructor(private router: Router) {}
 
-  onPassword() {
-    this.isPasswordValid = this.password.length >= 6;
+  // Сброс ошибок при очистке поля
+  onClearField(field: string) {
+    if (field === 'password') {
+      this.showPasswordError = false;
+    }
+    this.showEmptyFieldsError = false;
+  }
+
+  // Проверка заполненности обязательных полей
+  get isEmptyFields(): boolean {
+    return !this.nickname || !this.password;
+  }
+
+  // Цвет рамки для поля никнейма
+  getNicknameBorderColor(): string {
+    if (this.showEmptyFieldsError && !this.nickname) return 'red';
+    return '#ccc';
+  }
+
+  // Цвет рамки для поля пароля
+  getPasswordBorderColor(): string {
+    if (this.showEmptyFieldsError && !this.password) return 'red';
+    if (this.showPasswordError) return 'red';
+    return '#ccc';
   }
 
   onLogin() {
-    if (!this.nickname || !this.password) {
-      alert('Заполните все поля');
+    // Сбрасываем все ошибки
+    this.showEmptyFieldsError = false;
+    this.showPasswordError = false;
+
+    // Проверка на пустые поля
+    if (this.isEmptyFields) {
+      this.showEmptyFieldsError = true;
       return;
     }
-    if (!this.isPasswordValid) {
-      alert('Пароль должен быть минимум 6 символов');
+
+    // Здесь будет реальная проверка через сервер
+    // Пока для демонстрации: пароль "123456" - пускаем
+    if (this.password !== '123456') {
+      this.showPasswordError = true;
       return;
     }
-    console.log('Никнейм:', this.nickname);
-    console.log('Пароль:', this.password);
+
+    // Успешный вход
+    console.log('Вход выполнен:', this.nickname);
     this.router.navigate(['/feed']);
   }
 }

@@ -1,142 +1,212 @@
-<div style="display: flex; justify-content: center; align-items: center; min-height: 100vh; background: #e6f0fa;">
+<div style="display: flex; justify-content: center; align-items: center; min-height: 100vh; background: #D2F1FC; flex-direction: column; font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;">
 
-  <div style="width: 923px; height: auto; min-height: 1089px; background: white; box-shadow: 0 4px 12px rgba(0,0,0,0.1); display: flex; flex-direction: column; overflow: hidden; margin: 40px 0; border-radius: 30px;">
+  <div style="width: 923px; height: auto; background: white; box-shadow: 0 0 60px rgba(255, 255, 255, 0.98), 0 0 40px rgba(255, 255, 255, 0.8), 0 8px 30px rgba(0, 0, 0, 0.15); display: flex; flex-direction: column; overflow: hidden; margin-top: 40px;">
 
-   
-    <div style="background: #E2F6FF; padding: 30px 40px; flex-shrink: 0;">
-      <h2 style="margin: 0; color: #2c3e50; font-size: 28px; font-weight: 200; text-align: center;">Регистрация нового пользователя</h2>
+    <div style="background: #E2F6FF; padding: 20px 40px; flex-shrink: 0;">
+      <h2 style="margin: 0; color: #2c3e50; font-size: 26px; font-weight: 300; text-align: center;">Регистрация нового пользователя</h2>
     </div>
 
-  
-    <form style="padding: 30px 60px 40px; flex: 1; display: flex; flex-direction: column;">
+    <form style="padding: 40px 60px 20px; flex: 1; display: flex; flex-direction: column;" #regForm="ngForm">
 
-     
-      <div style="margin-bottom: 20px;">
-        <label style="display: block; font-size: 16px; font-weight: 500; margin-bottom: 5px; color: #333;">Никнейм*</label>
-        <input 
-          type="text" 
-          placeholder="Введите имя"
-          [(ngModel)]="nickname"
-          name="nickname"
-          style="width: 100%; padding: 12px 16px; font-size: 16px; border: 1px solid #ccc; border-radius: 12px; box-sizing: border-box; outline: none;"
-        >
+      <div style="display: flex; gap: 23px; margin-bottom: 20px;">
+
+        <div style="flex: 0 0 auto; width: calc(100% - 285px - 23px - 50px);">
+
+          <div style="margin-bottom: 15px; position: relative;">
+            <label style="display: block; font-size: 16px; font-weight: 400; margin-bottom: 5px; color: #6C757D;">Никнейм*</label>
+            <div style="position: relative;"
+                 (mouseenter)="showNicknameHint = true"
+                 (mouseleave)="showNicknameHint = false">
+              <input type="text" [(ngModel)]="nickname" name="nickname" maxlength="20"
+                style="width: 100%; height: 35px; padding: 0 30px 0 12px; font-size: 14px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; outline: none;"
+                [style.border-color]="getNicknameBorderColor()">
+              @if (nickname.length > 0) {
+                <span (click)="nickname = ''; onClearField('nickname')"
+                  style="position: absolute; right: 8px; top: 50%; transform: translateY(-50%); cursor: pointer; font-size: 18px; color: #999; user-select: none; line-height: 1;">×</span>
+              }
+            </div>
+            @if (showNicknameHint && !showNicknameTakenError) {
+              <div style="position: absolute; bottom: 100%; left: 15px; margin-bottom: 6px; background: #fff; color: #6C757D; padding: 8px 12px; border-radius: 6px; font-size: 13px; white-space: nowrap; z-index: 10; box-shadow: 0 2px 8px rgba(0,0,0,0.15); border: 1px solid #e0e0e0;">
+                От 3 до 20 символов. Латиница, кириллица, цифры и подчёркивания
+                <div style="position: absolute; top: 100%; left: 15px; width: 0; height: 0; border-left: 7px solid transparent; border-right: 7px solid transparent; border-top: 7px solid #fff;"></div>
+              </div>
+            }
+            @if (showNicknameTakenError) {
+              <div style="color: red; font-size: 12px; margin-top: 4px;">Такой никнейм уже занят</div>
+            }
+          </div>
+
+          <div style="margin-bottom: 15px;">
+            <label style="display: block; font-size: 16px; font-weight: 400; margin-bottom: 5px; color: #6C757D;">Почта*</label>
+            <div style="position: relative;">
+              <i class="bi bi-envelope" style="position: absolute; left: 10px; top: 50%; transform: translateY(-50%); font-size: 16px; color: #6C757D; z-index: 1;"></i>
+              <input type="email" placeholder="example@ex.ru" [(ngModel)]="email" name="email" maxlength="31"
+                style="width: 100%; height: 35px; padding: 0 30px 0 32px; font-size: 14px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; outline: none;"
+                [style.border-color]="getEmailBorderColor()">
+              @if (email.length > 0) {
+                <span (click)="email = ''; onClearField('email')"
+                  style="position: absolute; right: 8px; top: 50%; transform: translateY(-50%); cursor: pointer; font-size: 18px; color: #999; user-select: none; line-height: 1;">×</span>
+              }
+            </div>
+            @if (showEmailTakenError) {
+              <div style="color: red; font-size: 12px; margin-top: 4px;">Такая почта уже зарегистрирована</div>
+            }
+          </div>
+
+          <div style="margin-bottom: 15px; position: relative;">
+            <label style="display: block; font-size: 16px; font-weight: 400; margin-bottom: 5px; color: #6C757D;">Пароль*</label>
+            <div style="position: relative;"
+                 (mouseenter)="showPasswordHint = true"
+                 (mouseleave)="showPasswordHint = false">
+              <i [class]="showPassword ? 'bi bi-eye-slash' : 'bi bi-eye'"
+                (click)="togglePasswordVisibility()"
+                style="position: absolute; left: 10px; top: 50%; transform: translateY(-50%); cursor: pointer; font-size: 16px; color: #6C757D; z-index: 1;"></i>
+              <input [type]="showPassword ? 'text' : 'password'" [(ngModel)]="password" name="password" maxlength="20"
+                style="width: 100%; height: 35px; padding: 0 30px 0 32px; font-size: 14px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; outline: none;"
+                [style.border-color]="getPasswordBorderColor()">
+              @if (password.length > 0) {
+                <span (click)="password = ''; onClearField('password')"
+                  style="position: absolute; right: 8px; top: 50%; transform: translateY(-50%); cursor: pointer; font-size: 18px; color: #999; user-select: none; line-height: 1;">×</span>
+              }
+            </div>
+            @if (showPasswordHint && !showPasswordsMatchError) {
+              <div style="position: absolute; bottom: 100%; left: 15px; margin-bottom: 6px; background: #fff; color: #6C757D; padding: 8px 12px; border-radius: 6px; font-size: 13px; white-space: nowrap; z-index: 10; box-shadow: 0 2px 8px rgba(0,0,0,0.15); border: 1px solid #e0e0e0;">
+                От 6 до 20 символов. Латиница, цифры и подчёркивания
+                <div style="position: absolute; top: 100%; left: 15px; width: 0; height: 0; border-left: 7px solid transparent; border-right: 7px solid transparent; border-top: 7px solid #fff;"></div>
+              </div>
+            }
+          </div>
+
+          <div style="margin-bottom: 15px;">
+            <label style="display: block; font-size: 16px; font-weight: 400; margin-bottom: 5px; color: #6C757D;">Подтвердите пароль*</label>
+            <div style="position: relative;">
+              <i [class]="showConfirmPassword ? 'bi bi-eye-slash' : 'bi bi-eye'"
+                (click)="toggleConfirmPasswordVisibility()"
+                style="position: absolute; left: 10px; top: 50%; transform: translateY(-50%); cursor: pointer; font-size: 16px; color: #6C757D; z-index: 1;"></i>
+              <input [type]="showConfirmPassword ? 'text' : 'password'" [(ngModel)]="confirmPassword" name="confirmPassword" maxlength="20"
+                style="width: 100%; height: 35px; padding: 0 30px 0 32px; font-size: 14px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; outline: none;"
+                [style.border-color]="getConfirmPasswordBorderColor()">
+              @if (confirmPassword.length > 0) {
+                <span (click)="confirmPassword = ''; onClearField('confirmPassword')"
+                  style="position: absolute; right: 8px; top: 50%; transform: translateY(-50%); cursor: pointer; font-size: 18px; color: #999; user-select: none; line-height: 1;">×</span>
+              }
+            </div>
+            @if (showPasswordsMatchError) {
+              <div style="color: red; font-size: 12px; margin-top: 4px;">Пароли не совпадают</div>
+            }
+          </div>
+
+          <div style="margin-bottom: 15px;">
+            <label style="display: block; font-size: 16px; font-weight: 400; margin-bottom: 5px; color: #6C757D;">Фамилия</label>
+            <div style="position: relative;">
+              <input type="text" [(ngModel)]="lastName" name="lastName" maxlength="31"
+                style="width: 100%; height: 35px; padding: 0 30px 0 12px; font-size: 14px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; outline: none;">
+              @if (lastName.length > 0) {
+                <span (click)="lastName = ''"
+                  style="position: absolute; right: 8px; top: 50%; transform: translateY(-50%); cursor: pointer; font-size: 18px; color: #999; user-select: none; line-height: 1;">×</span>
+              }
+            </div>
+          </div>
+
+          <div style="margin-bottom: 0;">
+            <label style="display: block; font-size: 16px; font-weight: 400; margin-bottom: 5px; color: #6C757D;">Имя</label>
+            <div style="position: relative;">
+              <input type="text" [(ngModel)]="firstName" name="firstName" maxlength="31"
+                style="width: 100%; height: 35px; padding: 0 30px 0 12px; font-size: 14px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; outline: none;">
+              @if (firstName.length > 0) {
+                <span (click)="firstName = ''"
+                  style="position: absolute; right: 8px; top: 50%; transform: translateY(-50%); cursor: pointer; font-size: 18px; color: #999; user-select: none; line-height: 1;">×</span>
+              }
+            </div>
+          </div>
+
+        </div>
+
+        <div style="flex: 1; display: flex; justify-content: flex-end;">
+          <div style="width: 100%; height: 100%; border: 2px solid #ccc; border-radius: 6px; overflow: hidden; display: flex; align-items: center; justify-content: center; background: #fafafa; box-shadow: 0 2px 10px rgba(0,0,0,0.08);">
+            @if (photoPreviewUrl) {
+              <img [src]="photoPreviewUrl" style="width: 100%; height: 100%; object-fit: cover;">
+            }
+            @if (!photoPreviewUrl) {
+              <span style="color: #bbb; font-size: 14px; text-align: center; padding: 10px;">Нет фото</span>
+            }
+          </div>
+        </div>
+
       </div>
 
-   
       <div style="margin-bottom: 20px;">
-        <label style="display: block; font-size: 16px; font-weight: 500; margin-bottom: 5px; color: #333;">Почта*</label>
-        <input 
-          type="email" 
-          placeholder="Введите email"
-          [(ngModel)]="email"
-          name="email"
-          style="width: 100%; padding: 12px 16px; font-size: 16px; border: 1px solid #ccc; border-radius: 12px; box-sizing: border-box; outline: none;"
-        >
-      </div>
-
-      <div style="margin-bottom: 20px;">
-        <label style="display: block; font-size: 16px; font-weight: 500; margin-bottom: 5px; color: #333;">Пароль*</label>
-        <input 
-          type="password" 
-          placeholder="Введите пароль"
-          [(ngModel)]="password"
-          name="password"
-          (input)="onPasswordChange()"
-          style="width: 100%; padding: 12px 16px; font-size: 16px; border: 1px solid #ccc; border-radius: 12px; box-sizing: border-box; outline: none;"
-        >
-        <div *ngIf="password.length > 0 && password.length < 6" style="color: red; font-size: 14px; margin-top: 5px;">
-          Пароль должен быть минимум 6 символов
+        <label style="display: block; font-size: 16px; font-weight: 400; margin-bottom: 5px; color: #6C757D;">Выберите фото</label>
+        <div style="display: flex; align-items: center; max-width: 536px; width: 100%;">
+          <input type="text" [value]="photoPath" readonly
+            style="flex: 1; height: 35px; padding: 0 12px; font-size: 14px; border: 1px solid #ccc; border-right: none; border-radius: 6px 0 0 6px; box-sizing: border-box; outline: none; background: #f9f9f9; cursor: default;">
+          <button type="button" (click)="triggerFileInput()"
+            style="height: 35px; padding: 0 20px; font-size: 15px; font-weight: 400; cursor: pointer; background: #E2F6FF; color: #6C757D; border: 1px solid #ccc; border-radius: 0 6px 6px 0; white-space: nowrap;">
+            Обзор...
+          </button>
+          <input type="file" #fileInput (change)="onFileSelected($event)" accept="image/*" style="display: none;">
         </div>
       </div>
 
-      <div style="margin-bottom: 25px;">
-        <label style="display: block; font-size: 16px; font-weight: 500; margin-bottom: 5px; color: #333;">Подтвердите пароль*</label>
-        <input 
-          type="password" 
-          placeholder="Введите пароль"
-          [(ngModel)]="confirmPassword"
-          name="confirmPassword"
-          (input)="onPasswordChange()"
-          style="width: 100%; padding: 12px 16px; font-size: 16px; border: 1px solid #ccc; border-radius: 12px; box-sizing: border-box; outline: none; transition: border 0.3s; border-color: 'red';"
-        >
-     
-        <div *ngIf="!passwordsMatch && confirmPassword.length > 0" style="color: red; font-size: 14px; margin-top: 5px;">
-          ⚠ Пароли не совпадают
+      <div style="margin-bottom: 15px;">
+        <label style="display: block; font-size: 16px; font-weight: 400; margin-bottom: 5px; color: #6C757D;">Контактная информация</label>
+        <div style="position: relative; width: 100%;">
+          <textarea [(ngModel)]="contact" name="contact" rows="3" maxlength="255"
+            style="width: 100%; height: 58px; padding: 8px 30px 8px 12px; font-size: 14px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; outline: none; resize: none; font-family: inherit;"></textarea>
+          @if (contact.length > 0) {
+            <span (click)="contact = ''"
+              style="position: absolute; right: 8px; top: 10px; cursor: pointer; font-size: 18px; color: #999; user-select: none; line-height: 1;">×</span>
+          }
         </div>
       </div>
 
-      <div style="margin-bottom: 20px;">
-        <label style="display: block; font-size: 16px; font-weight: 500; margin-bottom: 5px; color: #333;">Фамилия</label>
-        <input 
-          type="text" 
-          placeholder="Введите фамилию"
-          [(ngModel)]="lastName"
-          name="lastName"
-          style="width: 100%; padding: 12px 16px; font-size: 16px; border: 1px solid #ccc; border-radius: 12px; box-sizing: border-box; outline: none;"
-        >
-      </div>
-      <div style="margin-bottom: 20px;">
-        <label style="display: block; font-size: 16px; font-weight: 500; margin-bottom: 5px; color: #333;">Имя</label>
-        <input 
-          type="text" 
-          placeholder="Введите имя"
-          [(ngModel)]="firstName"
-          name="firstName"
-          style="width: 100%; padding: 12px 16px; font-size: 16px; border: 1px solid #ccc; border-radius: 12px; box-sizing: border-box; outline: none;"
-        >
+      <div style="margin-bottom: 15px;">
+        <label style="display: block; font-size: 16px; font-weight: 400; margin-bottom: 5px; color: #6C757D;">О себе</label>
+        <div style="position: relative; width: 100%;">
+          <textarea [(ngModel)]="about" name="about" rows="3" maxlength="255"
+            style="width: 100%; height: 58px; padding: 8px 30px 8px 12px; font-size: 14px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; outline: none; resize: none; font-family: inherit;"></textarea>
+          @if (about.length > 0) {
+            <span (click)="about = ''"
+              style="position: absolute; right: 8px; top: 10px; cursor: pointer; font-size: 18px; color: #999; user-select: none; line-height: 1;">×</span>
+          }
+        </div>
       </div>
 
-      <div style="margin-bottom: 20px;">
-        <label style="display: block; font-size: 16px; font-weight: 500; margin-bottom: 5px; color: #333;">Контактная информация</label>
-        <input 
-          type="text" 
-          placeholder="Введите контактные данные"
-          [(ngModel)]="contact"
-          name="contact"
-          style="width: 100%; padding: 12px 16px; font-size: 16px; border: 1px solid #ccc; border-radius: 12px; box-sizing: border-box; outline: none;"
-        >
+      <div style="margin-bottom: 5px;">
+        <label style="display: block; font-size: 16px; font-weight: 400; margin-bottom: 5px; color: #6C757D;">Достижения</label>
+        <div style="position: relative; width: 100%;">
+          <textarea [(ngModel)]="achievements" name="achievements" rows="3" maxlength="255"
+            style="width: 100%; height: 58px; padding: 8px 30px 8px 12px; font-size: 14px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; outline: none; resize: none; font-family: inherit;"></textarea>
+          @if (achievements.length > 0) {
+            <span (click)="achievements = ''"
+              style="position: absolute; right: 8px; top: 10px; cursor: pointer; font-size: 18px; color: #999; user-select: none; line-height: 1;">×</span>
+          }
+        </div>
       </div>
 
-      <div style="margin-bottom: 20px;">
-        <label style="display: block; font-size: 16px; font-weight: 500; margin-bottom: 5px; color: #333;">О себе</label>
-        <input 
-          type="text" 
-          placeholder="Расскажите о себе"
-          [(ngModel)]="about"
-          name="about"
-          style="width: 100%; padding: 12px 16px; font-size: 16px; border: 1px solid #ccc; border-radius: 12px; box-sizing: border-box; outline: none;"
-        >
-      </div>
-
-      <div style="margin-bottom: 30px;">
-        <label style="display: block; font-size: 16px; font-weight: 500; margin-bottom: 5px; color: #333;">Достижения</label>
-        <input 
-          type="text" 
-          placeholder="Ваши достижения"
-          [(ngModel)]="achievements"
-          name="achievements"
-          style="width: 100%; padding: 12px 16px; font-size: 16px; border: 1px solid #ccc; border-radius: 12px; box-sizing: border-box; outline: none;"
-        >
-      </div>
-
-      <div style="display: flex; justify-content: center; margin-bottom: 30px;">
-        <button 
-          type="button" 
-          (click)="onRegister()"
-          style="background: #E2F6FF; color: #5D98DE; border: 4px solid #8fbdf5; padding: 16px 60px; font-size: 18px; font-weight: 600; cursor: pointer; letter-spacing: 1px; border-radius: 30px;"
-        >
+      <div style="display: flex; align-items: center; margin-top: 0;">
+        <span style="font-size: 14px; color: #6C757D; flex: 1; text-align: left; font-weight: 400;">* - поля, обязательные для заполнения</span>
+        <button type="button" (click)="onRegister()"
+          style="background: #E2F6FF; color: #5D98DE; border: 4px solid #B0D4F3; padding: 16px 80px; font-size: 20px; font-weight: 600; cursor: pointer; letter-spacing: 1px; border-radius: 0; white-space: nowrap;">
           Зарегистрироваться
         </button>
       </div>
 
-      <div style="display: flex; justify-content: center; align-items: center; gap: 15px;">
-        <span style="font-size: 18px; color: #555;">Уже есть аккаунт?</span>
-        <a routerLink="/login" style="background: #E2F6FF; color: #5D98DE; border: 4px solid #8fbdf5; padding: 12px 35px; font-size: 16px; font-weight: 600; cursor: pointer; text-decoration: none; display: inline-block; border-radius: 30px;">
-          Войти
-        </a>
-      </div>
+      @if (showEmptyFieldsError) {
+        <div style="color: red; font-size: 14px; margin-top: 10px; text-align: left;">
+          Заполнены не все обязательные поля!
+        </div>
+      }
 
     </form>
 
   </div>
+
+  <div style="display: flex; justify-content: center; align-items: center; gap: 15px; padding: 20px 0 40px;">
+    <span style="font-size: 18px; color: #555;">Уже есть аккаунт?</span>
+    <a routerLink="/login" style="background: #E2F6FF; color: #5D98DE; border: 4px solid #B0D4F3; padding: 12px 35px; font-size: 17px; font-weight: 600; cursor: pointer; text-decoration: none; display: inline-block; border-radius: 0;">
+      Войти
+    </a>
+  </div>
+
 </div>
