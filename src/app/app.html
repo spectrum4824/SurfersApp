@@ -1,13 +1,21 @@
-
-
 <header style="background: #71CBF2; padding: 0 30px; color: white; display: flex; justify-content: space-between; align-items: stretch; height: 60px;">
-  <h1 style="margin: 0; display: flex; align-items: center; font-size: 24px; font-family: 'Faster One', system-ui; font-weight: 400; font-style: normal;">SURF.RU</h1>
+  <h1 style="margin: 0; display: flex; align-items: center; font-size: 28px; font-family: 'Montserrat', sans-serif; cursor: pointer;" routerLink="/feed">SURF.RU</h1>
 
   <nav style="display: flex; align-items: stretch; gap: 0; height: 100%;">
-    <div style="width: 2px; background: #5D98DE;"></div>
-    <a routerLink="/login" style="color: black; text-decoration: none; display: flex; align-items: center; padding: 0 30px; font-size: 20px; font-weight: 300;">Войти</a>
-    <div style="width: 2px; background: #5D98DE;"></div>
-    <a routerLink="/registration" style="color: black; text-decoration: none; display: flex; align-items: center; padding: 0 30px; font-size: 20px; font-weight: 300;">Регистрация</a>
+    @if (!isLoginPage && !isRegistrationPage) {
+      <div style="width: 2px; background: #5D98DE;"></div>
+      <a routerLink="/login" style="color: black; text-decoration: none; display: flex; align-items: center; padding: 0 30px; font-size: 20px; font-weight: 300;">Войти</a>
+      <div style="width: 2px; background: #5D98DE;"></div>
+      <a routerLink="/registration" style="color: black; text-decoration: none; display: flex; align-items: center; padding: 0 30px; font-size: 20px; font-weight: 300;">Регистрация</a>
+    }
+    @if (isLoginPage) {
+      <div style="width: 2px; background: #5D98DE;"></div>
+      <a routerLink="/registration" style="color: black; text-decoration: none; display: flex; align-items: center; padding: 0 30px; font-size: 20px; font-weight: 300;">Регистрация</a>
+    }
+    @if (isRegistrationPage) {
+      <div style="width: 2px; background: #5D98DE;"></div>
+      <a routerLink="/login" style="color: black; text-decoration: none; display: flex; align-items: center; padding: 0 30px; font-size: 20px; font-weight: 300;">Войти</a>
+    }
   </nav>
 </header>
 

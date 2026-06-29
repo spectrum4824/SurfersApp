@@ -13,13 +13,17 @@ export class Authorization {
   nickname: string = '';
   password: string = '';
   
-  // Флаги для отображения ошибок
+  showPassword: boolean = false;
+  
   showEmptyFieldsError: boolean = false;
   showPasswordError: boolean = false;
 
   constructor(private router: Router) {}
 
-  // Сброс ошибок при очистке поля
+  togglePasswordVisibility() {
+    this.showPassword = !this.showPassword;
+  }
+
   onClearField(field: string) {
     if (field === 'password') {
       this.showPasswordError = false;
@@ -27,18 +31,15 @@ export class Authorization {
     this.showEmptyFieldsError = false;
   }
 
-  // Проверка заполненности обязательных полей
   get isEmptyFields(): boolean {
     return !this.nickname || !this.password;
   }
 
-  // Цвет рамки для поля никнейма
   getNicknameBorderColor(): string {
     if (this.showEmptyFieldsError && !this.nickname) return 'red';
     return '#ccc';
   }
 
-  // Цвет рамки для поля пароля
   getPasswordBorderColor(): string {
     if (this.showEmptyFieldsError && !this.password) return 'red';
     if (this.showPasswordError) return 'red';
@@ -46,24 +47,19 @@ export class Authorization {
   }
 
   onLogin() {
-    // Сбрасываем все ошибки
     this.showEmptyFieldsError = false;
     this.showPasswordError = false;
 
-    // Проверка на пустые поля
     if (this.isEmptyFields) {
       this.showEmptyFieldsError = true;
       return;
     }
 
-    // Здесь будет реальная проверка через сервер
-    // Пока для демонстрации: пароль "123456" - пускаем
     if (this.password !== '123456') {
       this.showPasswordError = true;
       return;
     }
 
-    // Успешный вход
     console.log('Вход выполнен:', this.nickname);
     this.router.navigate(['/feed']);
   }
