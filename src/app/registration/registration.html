@@ -32,8 +32,13 @@
                 <div style="position: absolute; top: 100%; left: 15px; width: 0; height: 0; border-left: 7px solid transparent; border-right: 7px solid transparent; border-top: 7px solid #fff;"></div>
               </div>
             }
+            @if (showNicknameLengthError) {
+              <div style="color: red; font-size: 12px; margin-top: 4px;">
+                Никнейм должен содержать от 3 до 20 символов
+              </div>
+            }
             @if (showNicknameTakenError) {
-              <div style="color: red; font-size: 12px; margin-top: 4px;">Такой никнейм уже занят</div>
+              <div style="color: red; font-size: 14px; margin-top: 4px;">Такой никнейм уже занят</div>
             }
           </div>
 
@@ -50,7 +55,7 @@
               }
             </div>
             @if (showEmailTakenError) {
-              <div style="color: red; font-size: 12px; margin-top: 4px;">Такая почта уже зарегистрирована</div>
+              <div style="color: red; font-size: 14px; margin-top: 4px;">Такая почта уже зарегистрирована</div>
             }
           </div>
 
@@ -70,6 +75,11 @@
                   style="position: absolute; right: 8px; top: 50%; transform: translateY(-50%); cursor: pointer; font-size: 18px; color: #999; user-select: none; line-height: 1;">×</span>
               }
             </div>
+            @if (showPasswordLengthError) {
+              <div style="color: red; font-size: 14px; margin-top: 4px;">
+                Пароль должен содержать от 6 до 20 символов
+              </div>
+            }
             @if (showPasswordHint && !showPasswordsMatchError) {
               <div style="position: absolute; bottom: 100%; left: 15px; margin-bottom: 6px; background: #fff; color: #6C757D; padding: 8px 12px; border-radius: 6px; font-size: 13px; white-space: nowrap; z-index: 10; box-shadow: 0 2px 8px rgba(0,0,0,0.15); border: 1px solid #e0e0e0;">
                 От 6 до 20 символов. Латиница, цифры и подчёркивания
@@ -93,7 +103,7 @@
               }
             </div>
             @if (showPasswordsMatchError) {
-              <div style="color: red; font-size: 12px; margin-top: 4px;">Пароли не совпадают</div>
+              <div style="color: red; font-size: 14px; margin-top: 4px;">Пароли не совпадают</div>
             }
           </div>
 
@@ -138,9 +148,9 @@
 
       <div style="margin-bottom: 20px;">
         <label style="display: block; font-size: 16px; font-weight: 400; margin-bottom: 5px; color: #6C757D;">Выберите фото</label>
-        <div style="display: flex; align-items: center; max-width: 536px; width: 100%;">
+        <div style="display: flex; align-items: center; max-width: 570px; width: 100%;">
           <input type="text" [value]="photoPath" readonly
-            style="flex: 1; height: 35px; padding: 0 12px; font-size: 14px; border: 1px solid #ccc; border-right: none; border-radius: 6px 0 0 6px; box-sizing: border-box; outline: none; background: #f9f9f9; cursor: default;">
+            style="flex: 1; height: 35px; padding: 0 12px; font-size: 14px; border: 1px solid #ccc; border-right: none; border-radius: 6px 0 0 6px; box-sizing: border-box; outline: none; background: #ffffff; cursor: default;">
           <button type="button" (click)="triggerFileInput()"
             style="height: 35px; padding: 0 20px; font-size: 15px; font-weight: 400; cursor: pointer; background: #E2F6FF; color: #6C757D; border: 1px solid #ccc; border-radius: 0 6px 6px 0; white-space: nowrap;">
             Обзор...
@@ -191,7 +201,7 @@
         <!-- ШИРИНА КНОПКИ: меняй padding -->
         <!-- ВЫСОТА КНОПКИ: 58px как поле Достижения -->
         <button type="button" (click)="onRegister()"
-          style="background: #E2F6FF; color: #5D98DE; border: 4px solid #B0D4F3; padding: 0 50px; height: 58px; font-size: 20px; font-weight: 600; cursor: pointer; letter-spacing: 1px; border-radius: 0; white-space: nowrap; display: flex; align-items: center; box-sizing: border-box;">
+          style="background: #E2F6FF; color: #5D98DE; border: 4px solid #B0D4F3; padding: 0 30px; height: 58px; font-size: 17px; font-weight: 600; cursor: pointer; letter-spacing: 1px; border-radius: 0; white-space: nowrap; display: flex; align-items: center; box-sizing: border-box;">
           Зарегистрироваться
         </button>
       </div>
@@ -209,9 +219,9 @@
 
   <div style="display: flex; justify-content: center; align-items: center; gap: 15px; padding: 20px 0 40px;">
     <span style="font-size: 18px; color: #555;">Уже есть аккаунт?</span>
-    <a routerLink="/login" style="background: #E2F6FF; color: #5D98DE; border: 4px solid #B0D4F3; padding: 12px 35px; font-size: 17px; font-weight: 600; cursor: pointer; text-decoration: none; display: inline-block; border-radius: 0;">
+    <span (click)="goToLogin()" style="background: #E2F6FF; color: #5D98DE; border: 4px solid #B0D4F3; padding: 12px 35px; font-size: 17px; font-weight: 600; cursor: pointer; text-decoration: none; display: inline-block; border-radius: 0;">
       Войти
-    </a>
+    </span>
   </div>
 
 </div>

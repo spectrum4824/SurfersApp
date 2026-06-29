@@ -23,6 +23,9 @@ export class Authorization {
   togglePasswordVisibility() {
     this.showPassword = !this.showPassword;
   }
+  goToRegistration() {
+    this.router.navigate(['/registration']);
+  }
 
   onClearField(field: string) {
     if (field === 'password') {

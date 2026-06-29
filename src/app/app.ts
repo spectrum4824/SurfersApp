@@ -13,6 +13,7 @@ import { filter } from 'rxjs/operators';
 export class App {
   isLoginPage: boolean = false;
   isRegistrationPage: boolean = false;
+  isLoggedIn: boolean = true;
 
   constructor(private router: Router) {
     this.router.events.pipe(
@@ -21,5 +22,10 @@ export class App {
       this.isLoginPage = event.url === '/login';
       this.isRegistrationPage = event.url === '/registration';
     });
+  }
+
+  logout() {
+    this.isLoggedIn = false;
+    this.router.navigate(['/feed']);
   }
 }

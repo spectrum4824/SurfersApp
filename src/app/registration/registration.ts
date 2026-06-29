@@ -33,6 +33,10 @@ export class Registration {
   showNicknameTakenError: boolean = false;
   showEmailTakenError: boolean = false;
   showPasswordsMatchError: boolean = false;
+  
+  // Новые флаги для валидации
+  showNicknameLengthError: boolean = false;
+  showPasswordLengthError: boolean = false;
 
   constructor(private router: Router) {}
 
@@ -44,8 +48,21 @@ export class Registration {
     return this.password === this.confirmPassword;
   }
 
+  // Проверка длины никнейма (от 3 до 20)
+  get isNicknameValid(): boolean {
+    return this.nickname.length === 0 || (this.nickname.length >= 3 && this.nickname.length <= 20);
+  }
+
+  // Проверка длины пароля (от 6 до 20)
+  get isPasswordValid(): boolean {
+    return this.password.length === 0 || (this.password.length >= 6 && this.password.length <= 20);
+  }
+
   togglePasswordVisibility() {
     this.showPassword = !this.showPassword;
+  }
+  goToLogin() {
+    this.router.navigate(['/login']);
   }
 
   toggleConfirmPasswordVisibility() {
@@ -55,18 +72,20 @@ export class Registration {
   onClearField(field: string) {
     if (field === 'nickname') {
       this.showNicknameTakenError = false;
+      this.showNicknameLengthError = false;
     }
     if (field === 'email') {
       this.showEmailTakenError = false;
     }
     if (field === 'password' || field === 'confirmPassword') {
       this.showPasswordsMatchError = false;
+      this.showPasswordLengthError = false;
     }
     this.showEmptyFieldsError = false;
   }
 
   getNicknameBorderColor(): string {
-    if ((this.showEmptyFieldsError && !this.nickname) || this.showNicknameTakenError) return 'red';
+    if ((this.showEmptyFieldsError && !this.nickname) || this.showNicknameTakenError || this.showNicknameLengthError) return 'red';
     return '#ccc';
   }
 
@@ -76,7 +95,7 @@ export class Registration {
   }
 
   getPasswordBorderColor(): string {
-    if ((this.showEmptyFieldsError && !this.password) || this.showPasswordsMatchError) return 'red';
+    if ((this.showEmptyFieldsError && !this.password) || this.showPasswordsMatchError || this.showPasswordLengthError) return 'red';
     return '#ccc';
   }
 
@@ -107,21 +126,39 @@ export class Registration {
   }
 
   onRegister() {
+    // Сбрасываем все ошибки
     this.showEmptyFieldsError = false;
     this.showNicknameTakenError = false;
     this.showEmailTakenError = false;
     this.showPasswordsMatchError = false;
+    this.showNicknameLengthError = false;
+    this.showPasswordLengthError = false;
 
+    // Проверка на пустые поля
     if (this.hasEmptyRequiredFields) {
       this.showEmptyFieldsError = true;
       return;
     }
 
+    // Проверка длины никнейма (от 3 символов)
+    if (this.nickname.length < 3) {
+      this.showNicknameLengthError = true;
+      return;
+    }
+
+    // Проверка длины пароля (от 6 символов)
+    if (this.password.length < 6) {
+      this.showPasswordLengthError = true;
+      return;
+    }
+
+    // Проверка на совпадение паролей
     if (!this.passwordsMatch) {
       this.showPasswordsMatchError = true;
       return;
     }
 
+    // Заглушки для серверных проверок
     if (this.nickname === 'test') {
       this.showNicknameTakenError = true;
       return;
@@ -132,6 +169,7 @@ export class Registration {
       return;
     }
 
+    // Успешная регистрация
     console.log('Регистрация успешна:', this.nickname);
     console.log('Фото:', this.photoPath);
     this.router.navigate(['/feed']);

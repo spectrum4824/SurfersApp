@@ -1,12 +1,12 @@
 import { Routes } from '@angular/router';
-import { Registration } from './registration/registration';
 import { Authorization } from './authorization/authorization';
-import { Newsfeed } from './newsfeed/newsfeed';
+import { Registration } from './registration/registration';
+import { NewsFeed } from './newsfeed/newsfeed';
 
 export const routes: Routes = [
-  { path: '', component: Newsfeed },
   { path: 'login', component: Authorization },
   { path: 'registration', component: Registration },
-  { path: 'feed', component: Newsfeed }
+  { path: 'newsfeed', component: NewsFeed },
+  { path: 'feed', redirectTo: '/newsfeed', pathMatch: 'full' },
+  { path: '', redirectTo: '/newsfeed', pathMatch: 'full' }
 ];
-
