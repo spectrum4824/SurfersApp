@@ -33,21 +33,29 @@
               </div>
             }
             @if (showNicknameLengthError) {
-              <div style="color: red; font-size: 12px; margin-top: 4px;">
+              <div style="color: red; font-size: 12px; margin-top: 4px; text-align: center;">
                 Никнейм должен содержать от 3 до 20 символов
               </div>
             }
             @if (showNicknameTakenError) {
-              <div style="color: red; font-size: 14px; margin-top: 4px;">Такой никнейм уже занят</div>
+              <div style="color: red; font-size: 14px; margin-top: 4px; text-align: center;">Такой никнейм уже занят</div>
             }
           </div>
 
           <div style="margin-bottom: 15px;">
             <label style="display: block; font-size: 16px; font-weight: 400; margin-bottom: 5px; color: #6C757D;">Почта*</label>
             <div style="position: relative;">
-              <i class="bi bi-envelope" style="position: absolute; left: 10px; top: 50%; transform: translateY(-50%); font-size: 16px; color: #6C757D; z-index: 1;"></i>
-              <input type="email" placeholder="example@ex.ru" [(ngModel)]="email" name="email" maxlength="31"
-                style="width: 100%; height: 40px; padding: 0 30px 0 32px; font-size: 14px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; outline: none;"
+              @if (!email) {
+                <i class="bi bi-envelope" 
+                  style="position: absolute; left: 10px; top: 50%; transform: translateY(-50%); font-size: 16px; color: #6C757D; z-index: 1; pointer-events: none;"></i>
+              }
+              <input type="email" 
+                placeholder="example@ex.ru" 
+                [(ngModel)]="email" 
+                name="email" 
+                maxlength="31"
+                [style.padding-left]="email ? '12px' : '32px'"
+                style="width: 100%; height: 40px; padding: 0 30px 0 12px; font-size: 14px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; outline: none;"
                 [style.border-color]="getEmailBorderColor()">
               @if (email.length > 0) {
                 <span (click)="email = ''; onClearField('email')"
@@ -55,7 +63,7 @@
               }
             </div>
             @if (showEmailTakenError) {
-              <div style="color: red; font-size: 14px; margin-top: 4px;">Такая почта уже зарегистрирована</div>
+              <div style="color: red; font-size: 14px; margin-top: 4px; text-align: center;">Такая почта уже зарегистрирована</div>
             }
           </div>
 
@@ -76,7 +84,7 @@
               }
             </div>
             @if (showPasswordLengthError) {
-              <div style="color: red; font-size: 14px; margin-top: 4px;">
+              <div style="color: red; font-size: 14px; margin-top: 4px; text-align: center;">
                 Пароль должен содержать от 6 до 20 символов
               </div>
             }
@@ -103,7 +111,7 @@
               }
             </div>
             @if (showPasswordsMatchError) {
-              <div style="color: red; font-size: 14px; margin-top: 4px;">Пароли не совпадают</div>
+              <div style="color: red; font-size: 14px; margin-top: 4px; text-align: center;">Пароли не совпадают</div>
             }
           </div>
 

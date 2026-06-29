@@ -42,8 +42,7 @@ export class NewsFeed {
       avatar: 'https://i.pravatar.cc/40?img=1',
       date: '13.06.2019 в 20:15',
       text: 'Sample text Sample text Sample text Sample text Sample text Sample text Sample text Sample text Sample text Sample text Sample text Sample text Sample text.',
-      image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1c/Large_wave_at_Banzai_Pipeline.jpg/800px-Large_wave_at_Banzai_Pipeline.jpg',
-      likes: 100,
+      image: 'assets/images/Surfer.jpg',      likes: 100,
       isLiked: false
     },
     {

@@ -1,35 +1,37 @@
 <header style="background: #76CFF4; padding: 0 30px; color: white; display: flex; justify-content: space-between; align-items: stretch; height: 60px;">
   <h1 style="margin: 0; display: flex; align-items: center; font-size: 28px; font-family: 'Faster One', system-ui; font-weight: 400; font-style: normal; cursor: pointer;" routerLink="/newsfeed">SURF.RU</h1>
 
-  <nav style="display: flex; align-items: stretch; height: 100%;">
+  <nav style="display: flex; align-items: center; height: 100%;">
     
     <!-- Лента новостей: НЕавторизован -->
     @if (!isLoginPage && !isRegistrationPage && !isLoggedIn) {
-      <div style="width: 2px; background: #5D98DE;"></div>
-      <a routerLink="/login" style="color: black; text-decoration: none; font-size: 20px; font-weight: 300; padding: 0 30px; display: flex; align-items: center;">Войти</a>
-      <div style="width: 2px; background: #5D98DE;"></div>
-      <a routerLink="/registration" style="color: black; text-decoration: none; font-size: 20px; font-weight: 300; padding: 0 30px; display: flex; align-items: center;">Регистрация</a>
+      <div style="width: 2px; background: #5D98DE; height: 100%;"></div>
+      <a routerLink="/login" style="color: black; text-decoration: none; font-size: 20px; font-weight: 300; padding: 0 30px; display: flex; align-items: center; height: 100%;">Войти</a>
+      <div style="width: 2px; background: #5D98DE; height: 100%;"></div>
+      <a routerLink="/registration" style="color: black; text-decoration: none; font-size: 20px; font-weight: 300; padding: 0 30px; display: flex; align-items: center; height: 100%;">Регистрация</a>
     }
     
     <!-- Лента новостей: АВТОРИЗОВАН -->
     @if (!isLoginPage && !isRegistrationPage && isLoggedIn) {
-      <div style="width: 2px; background: #5D98DE;"></div>
-      <img src="https://i.pravatar.cc/32?img=3" style="width: 32px; height: 32px; border-radius: 50%; object-fit: cover; margin: 0 10px;">
-      <span style="color: black; font-size: 14px;">Nikolpix</span>
-      <div style="width: 2px; background: #5D98DE;"></div>
-      <i class="bi bi-box-arrow-right" (click)="logout()" style="color: black; font-size: 20px; cursor: pointer; padding: 0 15px; display: flex; align-items: center;"></i>
+      <div style="width: 2px; background: #5D98DE; height: 100%;"></div>
+      <div style="display: flex; align-items: center; padding: 0 15px; gap: 10px; height: 100%;">
+        <img src="https://i.pravatar.cc/32?img=3" style="width: 32px; height: 32px; border-radius: 50%; object-fit: cover;">
+        <span style="color: black; font-size: 14px;">Nikolpix</span>
+      </div>
+      <div style="width: 2px; background: #5D98DE; height: 100%;"></div>
+      <i class="bi bi-box-arrow-right" (click)="logout()" style="color: black; font-size: 20px; cursor: pointer; padding: 0 15px; display: flex; align-items: center; height: 100%;"></i>
     }
     
     <!-- Страница Авторизации -->
     @if (isLoginPage) {
-      <div style="width: 2px; background: #5D98DE;"></div>
-      <a routerLink="/registration" style="color: black; text-decoration: none; font-size: 20px; font-weight: 300; padding: 0 30px; display: flex; align-items: center;">Регистрация</a>
+      <div style="width: 2px; background: #5D98DE; height: 100%;"></div>
+      <a routerLink="/registration" style="color: black; text-decoration: none; font-size: 20px; font-weight: 300; padding: 0 30px; display: flex; align-items: center; height: 100%;">Регистрация</a>
     }
     
     <!-- Страница Регистрации -->
     @if (isRegistrationPage) {
-      <div style="width: 2px; background: #5D98DE;"></div>
-      <a routerLink="/login" style="color: black; text-decoration: none; font-size: 20px; font-weight: 300; padding: 0 30px; display: flex; align-items: center;">Войти</a>
+      <div style="width: 2px; background: #5D98DE; height: 100%;"></div>
+      <a routerLink="/login" style="color: black; text-decoration: none; font-size: 20px; font-weight: 300; padding: 0 30px; display: flex; align-items: center; height: 100%;">Войти</a>
     }
     
   </nav>
