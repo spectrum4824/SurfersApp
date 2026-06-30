@@ -31,7 +31,7 @@ public class LoginController : ControllerBase
         if (user == null)
             return Unauthorized(new { message = "Неверный логин или пароль" });
 
-        return Ok(new { userId = user.Id, nickname = user.Nickname });
+        return Ok(new { userId = user.Id, nickname = user.Nickname, photo = user.Photo });
     }
 }
 

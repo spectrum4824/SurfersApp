@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { Inject } from '@angular/core';
 import { UserService } from '../user.service';
+import { ChangeDetectorRef } from '@angular/core';
 
 @Component({
   standalone: true,
@@ -49,7 +50,8 @@ export class Registration {
     private router: Router,
     private http: HttpClient,
     @Inject('BASE_API_URL') private baseUrl: string,
-    private userService: UserService
+    private userService: UserService,
+    private cdr: ChangeDetectorRef
   ) {}
 
   get hasEmptyRequiredFields(): boolean {
@@ -133,6 +135,7 @@ export class Registration {
       const reader = new FileReader();
       reader.onload = (e) => {
         this.photoPreviewUrl = e.target?.result as string;
+        this.cdr.detectChanges();
       };
       reader.readAsDataURL(file);
     }

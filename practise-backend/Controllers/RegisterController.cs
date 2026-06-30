@@ -33,6 +33,13 @@ public class RegisterController : ControllerBase
         if (existingUser != null)
             return Conflict(new { message = "Пользователь с таким email или никнеймом уже существует" });
 
+        // Сохраняем аватар если загружен
+        string? avatarFileName = null;
+        if (registerDto.AvatarFile != null)
+        {
+            avatarFileName = ImageSaveHelper.SaveImage(registerDto.AvatarFile);
+        }
+
         // Создание нового пользователя
         var user = new User
         {
@@ -44,13 +51,13 @@ public class RegisterController : ControllerBase
             ContactInfo = registerDto.Contact,
             AboutMe = registerDto.About,
             Achievements = registerDto.Achievements,
-            Photo = registerDto.Avatar
+            Photo = avatarFileName
         };
 
         _context.Users.Add(user);
         await _context.SaveChangesAsync();
 
-        return Ok(new { userId = user.Id, nickname = user.Nickname });
+        return Ok(new { userId = user.Id, nickname = user.Nickname, photo = user.Photo });
     }
 }
 
@@ -83,6 +90,6 @@ public class RegisterDto
     /// <summary>Достижения (необязательно)</summary>
     public string? Achievements { get; set; }
     
-    /// <summary>Ссылка на аватар (необязательно)</summary>
-    public string? Avatar { get; set; }
+    /// <summary>Файл аватара (необязательно)</summary>
+    public IFormFile? AvatarFile { get; set; }
 }

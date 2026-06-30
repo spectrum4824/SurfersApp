@@ -31,7 +31,8 @@ export class UserService {
     this.http.post(this.baseUrl + '/Login', body).subscribe({
       next: (user: any) => {
         const authData = window.btoa(login + ':' + password);
-        const userInfo: UserInfo = { login: login, photo: user.photo, authData: authData };
+        const photoUrl = user.photo ? `http://localhost:5001/static/img/${user.photo}` : '';
+        const userInfo: UserInfo = { login: login, photo: photoUrl, authData: authData };
         localStorage.setItem('userInfo', JSON.stringify(userInfo));
         localStorage.setItem('isAuthenticated', 'true');
 
