@@ -39,16 +39,16 @@ export class NewsFeed {
     {
       id: 1,
       author: 'Enotovod',
-      avatar: 'https://i.pravatar.cc/40?img=1',
+      avatar: 'https://i.pinimg.com/236x/13/fa/a6/13faa6b477fb99e0ee8303c812819ed9.jpg',
       date: '13.06.2019 в 20:15',
       text: 'Sample text Sample text Sample text Sample text Sample text Sample text Sample text Sample text Sample text Sample text Sample text Sample text Sample text.',
-      image: 'assets/images/Surfer.jpg', likes: 100,
+      image: 'https://img.redbull.com/images/q_auto,f_auto/redbullcom/2015/06/16/1331729713294_2/5-%D1%81%D0%B0%D0%BC%D1%8B%D1%85-%D0%B7%D1%80%D0%B5%D0%BB%D0%B8%D1%89%D0%BD%D1%8B%D1%85-%D0%B2%D0%B0%D0%B9%D0%BF%D0%B0%D1%83%D1%82%D0%BE%D0%B2-%D0%B3%D0%BE%D0%B4%D0%B0.jpg', likes: 100,
       isLiked: false
     },
     {
       id: 2,
       author: 'SurferGirl',
-      avatar: 'https://i.pravatar.cc/40?img=5',
+      avatar: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT4Y9xHnB991npVGde0Nv54pSMh5Ce3HwDBmQ&s',
       date: '14.06.2019 в 10:30',
       text: 'Поймала отличную волну сегодня!',
       image: '',

@@ -1,4 +1,6 @@
 using practise_backend.Data;
+using practise_backend.Authorization;
+using Microsoft.Extensions.FileProviders;
 using practise_backend.Models;
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
@@ -41,9 +43,14 @@ var app = builder.Build();
 
 app.UseCors("AllowAngularOrigins");
 
-app.UseStaticFiles();
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = new PhysicalFileProvider(
+        Path.Combine(builder.Environment.ContentRootPath, "StaticFiles")),
+    RequestPath = "/static"
+});
 
-//app.UseMiddleware<BasicAuthMiddleware>();
+app.UseMiddleware<BasicAuthMiddleware>();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

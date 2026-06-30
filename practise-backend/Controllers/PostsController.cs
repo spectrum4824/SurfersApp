@@ -2,9 +2,14 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using practise_backend.Data;
 using practise_backend.Models;
+using practise_backend.Helpers;
+using practise_backend.Authorization;
 
 namespace practise_backend.Controllers;
 
+/// <summary>
+/// Контроллер для работы с постами
+/// </summary>
 [ApiController]
 [Route("api/[controller]")]
 public class PostsController : ControllerBase
@@ -16,7 +21,9 @@ public class PostsController : ControllerBase
         _context = context;
     }
 
-    // GET: api/posts — получить все посты
+    /// <summary>
+    /// Возвращает все посты, отсортированные по дате (новые сверху)
+    /// </summary>
     [HttpGet]
     public async Task<IActionResult> GetPosts()
     {
@@ -38,16 +45,25 @@ public class PostsController : ControllerBase
         return Ok(posts);
     }
 
-    // POST: api/posts — добавить пост
+    /// <summary>
+    /// Добавляет новый пост и возвращает обновлённый список всех постов
+    /// </summary>
     [HttpPost]
-    public async Task<IActionResult> AddPost([FromBody] PostDto postDto)
+    public async Task<IActionResult> AddPost([FromForm] PostDto postDto)
     {
+        string? imageFileName = null;
+
+        if (postDto.ImageFile != null)
+        {
+            imageFileName = ImageSaveHelper.SaveImage(postDto.ImageFile);
+        }
+
         var post = new Post
         {
-            UserID = 1, // пока захардкожено, потом из авторизации
+            UserID = 4,
             Date = DateTime.Now,
             Text = postDto.Text,
-            Image = postDto.Image,
+            Image = imageFileName,
             Likes = 0
         };
 
@@ -73,8 +89,14 @@ public class PostsController : ControllerBase
     }
 }
 
+/// <summary>
+/// DTO для добавления поста
+/// </summary>
 public class PostDto
 {
+    /// <summary>Текст поста</summary>
     public string Text { get; set; } = string.Empty;
-    public string? Image { get; set; }
+    
+    /// <summary>Файл изображения (необязательно)</summary>
+    public IFormFile? ImageFile { get; set; }
 }

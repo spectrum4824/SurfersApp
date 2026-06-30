@@ -1,0 +1,48 @@
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using practise_backend.Data;
+
+namespace practise_backend.Controllers;
+
+/// <summary>
+/// Контроллер для входа в систему
+/// </summary>
+[ApiController]
+[Route("api/[controller]")]
+public class LoginController : ControllerBase
+{
+    private readonly ApplicationContext _context;
+
+    public LoginController(ApplicationContext context)
+    {
+        _context = context;
+    }
+
+    /// <summary>
+    /// Проверяет наличие пользователя в БД по логину (email или никнейм) и паролю
+    /// </summary>
+    [HttpPost]
+    public async Task<IActionResult> Login([FromBody] LoginDto loginDto)
+    {
+        var user = await _context.Users
+            .FirstOrDefaultAsync(u => (u.Mail == loginDto.Login || u.Nickname == loginDto.Login) 
+                                       && u.Password == loginDto.Password);
+
+        if (user == null)
+            return Unauthorized(new { message = "Неверный логин или пароль" });
+
+        return Ok(new { userId = user.Id, nickname = user.Nickname });
+    }
+}
+
+/// <summary>
+/// DTO для запроса входа в систему
+/// </summary>
+public class LoginDto
+{
+    /// <summary>Email или никнейм пользователя</summary>
+    public string Login { get; set; } = string.Empty;
+    
+    /// <summary>Пароль пользователя</summary>
+    public string Password { get; set; } = string.Empty;
+}
