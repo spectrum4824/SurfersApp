@@ -6,7 +6,7 @@
       <h2 style="margin: 0; color: #2c3e50; font-size: 26px; font-weight: 300; text-align: center;">Авторизация</h2>
     </div>
 
-    <form style="padding: 200px 60px 30px; flex: 1; display: flex; flex-direction: column; align-items: center;" #loginForm="ngForm">
+    <form (ngSubmit)="onLogin()" style="padding: 200px 60px 30px; flex: 1; display: flex; flex-direction: column; align-items: center;" #loginForm="ngForm">
 
       <!-- Поле Никнейм/Почта -->
       <div style="margin-bottom: 25px; width: 100%; max-width: 400px;">
@@ -70,19 +70,27 @@
       }
 
       <button 
-        type="button" 
-        (click)="onLogin()"
+        type="submit"
         style="background: #E2F6FF; height: 58px; color: #5D98DE; border: 4px solid #B0D4F3; padding: 1px 50px; font-size: 17px; font-weight: 600; cursor: pointer; letter-spacing: 1px; border-radius: 0; white-space: nowrap;"
       >
         Войти
       </button>
 
-      <div style="display: flex; justify-content: center; align-items: center; gap: 15px; margin-top: 200px; margin-bottom: 30px;">
-        <span style="font-size: 16px; color: #6C757D;">Ещё нет аккаунта?</span>
-        <span (click)="goToRegistration()" style="background: #E2F6FF; color: #5D98DE; border: 4px solid #B0D4F3; padding: 12px 35px; font-size: 17px; font-weight: 600; cursor: pointer; text-decoration: none; display: inline-block; border-radius: 0;">
-          Зарегистрироваться
-        </span>
-      </div>
+      @if (serverError) {
+        <div style="color: red; font-size: 14px; margin-top: 10px; text-align: center;">
+          {{ serverError }}
+        </div>
+      }
+
     </form>
+
+    <!-- Кнопка Регистрации ВНЕ формы -->
+    <div style="display: flex; justify-content: center; align-items: center; gap: 15px; margin-top: 30px; margin-bottom: 30px;">
+      <span style="font-size: 16px; color: #6C757D;">Ещё нет аккаунта?</span>
+      <span (click)="goToRegistration()" style="background: #E2F6FF; color: #5D98DE; border: 4px solid #B0D4F3; padding: 12px 35px; font-size: 17px; font-weight: 600; cursor: pointer; text-decoration: none; display: inline-block; border-radius: 0;">
+        Зарегистрироваться
+      </span>
+    </div>
+
   </div>
 </div>

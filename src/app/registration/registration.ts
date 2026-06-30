@@ -1,6 +1,9 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { HttpClient } from '@angular/common/http';
+import { Inject } from '@angular/core';
+import { UserService } from '../user.service';
 
 @Component({
   standalone: true,
@@ -22,6 +25,7 @@ export class Registration {
 
   photoPath: string = '';
   photoPreviewUrl: string = '';
+  selectedFile: File | null = null;
 
   showPassword: boolean = false;
   showConfirmPassword: boolean = false;
@@ -33,12 +37,20 @@ export class Registration {
   showNicknameTakenError: boolean = false;
   showEmailTakenError: boolean = false;
   showPasswordsMatchError: boolean = false;
-  
-  // Новые флаги для валидации
   showNicknameLengthError: boolean = false;
   showPasswordLengthError: boolean = false;
+  
+  // Флаг загрузки
+  isLoading: boolean = false;
+  // Ошибка от сервера
+  serverError: string = '';
 
-  constructor(private router: Router) {}
+  constructor(
+    private router: Router,
+    private http: HttpClient,
+    @Inject('BASE_API_URL') private baseUrl: string,
+    private userService: UserService
+  ) {}
 
   get hasEmptyRequiredFields(): boolean {
     return !this.nickname || !this.email || !this.password || !this.confirmPassword;
@@ -48,12 +60,10 @@ export class Registration {
     return this.password === this.confirmPassword;
   }
 
-  // Проверка длины никнейма (от 3 до 20)
   get isNicknameValid(): boolean {
     return this.nickname.length === 0 || (this.nickname.length >= 3 && this.nickname.length <= 20);
   }
 
-  // Проверка длины пароля (от 6 до 20)
   get isPasswordValid(): boolean {
     return this.password.length === 0 || (this.password.length >= 6 && this.password.length <= 20);
   }
@@ -61,6 +71,7 @@ export class Registration {
   togglePasswordVisibility() {
     this.showPassword = !this.showPassword;
   }
+
   goToLogin() {
     this.router.navigate(['/login']);
   }
@@ -82,6 +93,7 @@ export class Registration {
       this.showPasswordLengthError = false;
     }
     this.showEmptyFieldsError = false;
+    this.serverError = '';
   }
 
   getNicknameBorderColor(): string {
@@ -115,6 +127,7 @@ export class Registration {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length > 0) {
       const file = input.files[0];
+      this.selectedFile = file;
       this.photoPath = file.name;
       
       const reader = new FileReader();
@@ -126,52 +139,69 @@ export class Registration {
   }
 
   onRegister() {
-    // Сбрасываем все ошибки
+    // Сбрасываем ошибки
     this.showEmptyFieldsError = false;
     this.showNicknameTakenError = false;
     this.showEmailTakenError = false;
     this.showPasswordsMatchError = false;
     this.showNicknameLengthError = false;
     this.showPasswordLengthError = false;
+    this.serverError = '';
 
-    // Проверка на пустые поля
+    // Проверки
     if (this.hasEmptyRequiredFields) {
       this.showEmptyFieldsError = true;
       return;
     }
-
-    // Проверка длины никнейма (от 3 символов)
     if (this.nickname.length < 3) {
       this.showNicknameLengthError = true;
       return;
     }
-
-    // Проверка длины пароля (от 6 символов)
     if (this.password.length < 6) {
       this.showPasswordLengthError = true;
       return;
     }
-
-    // Проверка на совпадение паролей
     if (!this.passwordsMatch) {
       this.showPasswordsMatchError = true;
       return;
     }
 
-    // Заглушки для серверных проверок
-    if (this.nickname === 'test') {
-      this.showNicknameTakenError = true;
-      return;
+    this.isLoading = true;
+
+    // Собираем FormData
+    const formData = new FormData();
+    formData.append('Nickname', this.nickname);
+    formData.append('Email', this.email);
+    formData.append('Password', this.password);
+    formData.append('FirstName', this.firstName);
+    formData.append('LastName', this.lastName);
+    formData.append('Contact', this.contact);
+    formData.append('About', this.about);
+    formData.append('Achievements', this.achievements);
+    
+    if (this.selectedFile) {
+      formData.append('AvatarFile', this.selectedFile);
     }
 
-    if (this.email === 'test@test.ru') {
-      this.showEmailTakenError = true;
-      return;
-    }
-
-    // Успешная регистрация
-    console.log('Регистрация успешна:', this.nickname);
-    console.log('Фото:', this.photoPath);
-    this.router.navigate(['/feed']);
+    // Отправляем запрос
+    this.http.post(this.baseUrl + '/Register', formData).subscribe({
+      next: (user: any) => {
+        this.isLoading = false;
+        console.log('Регистрация успешна:', user);
+        
+        // После регистрации сразу логинимся
+        this.userService.login(this.nickname, this.password);
+      },
+      error: (error: any) => {
+        this.isLoading = false;
+        console.error('Ошибка регистрации:', error);
+        
+        if (error.status === 409) {
+          this.serverError = 'Пользователь с таким email или никнеймом уже существует';
+        } else {
+          this.serverError = 'Ошибка сервера. Попробуйте позже.';
+        }
+      }
+    });
   }
 }

@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
 import { RouterModule } from '@angular/router';
 import { filter } from 'rxjs/operators';
+import { UserService, UserInfo } from './user.service';
 
 @Component({
   standalone: true,
@@ -10,12 +11,16 @@ import { filter } from 'rxjs/operators';
   templateUrl: './app.html',
   styleUrl: './app.css'
 })
-export class App {
+export class App implements OnInit {
   isLoginPage: boolean = false;
   isRegistrationPage: boolean = false;
-  isLoggedIn: boolean = true;
+  isLoggedIn: boolean = false;
+  userInfo: UserInfo | null = null;
 
-  constructor(private router: Router) {
+  constructor(
+    private router: Router,
+    private userService: UserService
+  ) {
     this.router.events.pipe(
       filter(event => event instanceof NavigationEnd)
     ).subscribe((event: any) => {
@@ -24,8 +29,21 @@ export class App {
     });
   }
 
+  ngOnInit() {
+    this.updateAuthState();
+
+    // Подписываемся на изменения авторизации
+    this.userService.authChanged.subscribe(() => {
+      this.updateAuthState();
+    });
+  }
+
+  updateAuthState() {
+    this.isLoggedIn = this.userService.isAuthenticated();
+    this.userInfo = this.userService.getUserInfo();
+  }
+
   logout() {
-    this.isLoggedIn = false;
-    this.router.navigate(['/feed']);
+    this.userService.logout();
   }
 }

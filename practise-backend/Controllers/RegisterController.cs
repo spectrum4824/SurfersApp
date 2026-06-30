@@ -24,7 +24,7 @@ public class RegisterController : ControllerBase
     /// Регистрирует нового пользователя, проверяет что email и никнейм не заняты
     /// </summary>
     [HttpPost]
-    public async Task<IActionResult> Register([FromBody] RegisterDto registerDto)
+    public async Task<IActionResult> Register([FromForm] RegisterDto registerDto)
     {
         // Проверка дубликатов
         var existingUser = await _context.Users

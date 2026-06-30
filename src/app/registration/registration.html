@@ -163,7 +163,7 @@
             style="height: 35px; padding: 0 20px; font-size: 15px; font-weight: 400; cursor: pointer; background: #E2F6FF; color: #6C757D; border: 1px solid #ccc; border-radius: 0 6px 6px 0; white-space: nowrap;">
             Обзор...
           </button>
-          <input type="file" #fileInput (change)="onFileSelected($event)" accept="image/*" style="display: none;">
+          <input type="file" #fileInput id="fileInput" (change)="onFileSelected($event)" accept="image/*" style="display: none;">
         </div>
       </div>
 
@@ -218,6 +218,11 @@
       @if (showEmptyFieldsError) {
         <div style="color: red; font-size: 14px; margin-top: 10px; text-align: right;">
           Заполнены не все обязательные поля!
+        </div>
+      }
+      @if (serverError) {
+        <div style="color: red; font-size: 14px; margin-top: 10px; text-align: center;">
+          {{ serverError }}
         </div>
       }
 

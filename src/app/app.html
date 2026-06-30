@@ -15,22 +15,23 @@
     @if (!isLoginPage && !isRegistrationPage && isLoggedIn) {
       <div style="width: 2px; background: #5D98DE; height: 100%;"></div>
       <div style="display: flex; align-items: center; padding: 0 15px; gap: 10px; height: 100%;">
-        <img src="https://i.pravatar.cc/32?img=3" style="width: 32px; height: 32px; border-radius: 50%; object-fit: cover;">
-        <span style="color: black; font-size: 14px;">Nikolpix</span>
+        <img [src]="userInfo?.photo || 'https://i.pravatar.cc/32?img=3'" style="width: 32px; height: 32px; border-radius: 50%; object-fit: cover;">
+        <span style="color: black; font-size: 14px;">{{ userInfo?.login }}</span>
       </div>
-      <div style="width: 2px; background: #5D98DE; height: 100%;"></div>
+      
+      <div style="width: 3px; background: #5D98DE; height: 100%;"></div>
       <i class="bi bi-box-arrow-right" (click)="logout()" style="color: black; font-size: 20px; cursor: pointer; padding: 0 15px; display: flex; align-items: center; height: 100%;"></i>
     }
     
     <!-- Страница Авторизации -->
     @if (isLoginPage) {
-      <div style="width: 2px; background: #5D98DE; height: 100%;"></div>
+      <div style="min-width: 2px; width: 2px; background: #5D98DE; height: 100%;"></div>
       <a routerLink="/registration" style="color: black; text-decoration: none; font-size: 20px; font-weight: 300; padding: 0 30px; display: flex; align-items: center; height: 100%;">Регистрация</a>
     }
     
     <!-- Страница Регистрации -->
     @if (isRegistrationPage) {
-      <div style="width: 2px; background: #5D98DE; height: 100%;"></div>
+      <div style="min-width: 2px; width: 2px; background: #5D98DE; height: 100%;"></div>
       <a routerLink="/login" style="color: black; text-decoration: none; font-size: 20px; font-weight: 300; padding: 0 30px; display: flex; align-items: center; height: 100%;">Войти</a>
     }
     
