@@ -46,4 +46,9 @@ export class App implements OnInit {
   logout() {
     this.userService.logout();
   }
+
+  onAvatarError(event: Event) {
+    const img = event.target as HTMLImageElement;
+    img.src = 'https://i.pinimg.com/236x/1a/a4/ce/1aa4cedee524828a8ac40cb77adfa233.jpg';
+  }
 }

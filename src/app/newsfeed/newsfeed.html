@@ -18,10 +18,9 @@
             <div style="display: flex; justify-content: space-between; align-items: center;">
               <div style="display: flex; align-items: center;">
                 <input type="text" 
-                  [(ngModel)]="newPostImagePath" 
-                  name="newPostImageUrl"
-                  placeholder="URL картинки или assets/..."
-                  style="width: 200px; height: 35px; padding: 0 10px; font-size: 14px; border: 1px solid #ccc; border-right: none; box-sizing: border-box; outline: none; background: white; cursor: text;">
+                  [value]="newPostImagePath" 
+                  readonly
+                  style="width: 200px; height: 35px; padding: 0 10px; font-size: 14px; border: 1px solid #ccc; border-right: none; box-sizing: border-box; outline: none; background: #f9f9f9; cursor: default;">
                 <button type="button" (click)="triggerPostFileInput()"
                   style="height: 35px; padding: 0 20px; font-size: 14px; cursor: pointer; background: #E2F6FF; color: #5D98DE; border: 1px solid #ccc; white-space: nowrap;">Обзор...</button>
                 <input type="file" #postFileInput (change)="onPostFileSelected($event)" accept="image/*" style="display: none;">
@@ -46,7 +45,7 @@
     @for (post of posts; track post.id) {
       <div style="background: white; margin-bottom: 20px;">
         <div style="background: #C5E7F5; padding: 10px 15px; display: flex; align-items: center;">
-          <img [src]="post.avatar" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover; margin-right: 10px;">
+          <img [src]="post.avatar" (error)="onAvatarError($event)" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover; margin-right: 10px;">
           <div>
             <div style="color: #000; font-weight: bold; font-size: 14px;">{{ post.author }}</div>
             <div style="color: #888; font-size: 12px;">{{ post.date }}</div>
@@ -58,9 +57,9 @@
         }
         
         @if (post.image) {
-            <img [src]="post.image" 
-                
-                style="width: 100%; max-height: 400px; display: block; object-fit: cover;">
+          <img [src]="post.image" 
+            (error)="onImageError($event)"
+            style="width: 100%; max-height: 400px; display: block; object-fit: cover;">
         }
         
         <div style="background: #C5E7F5; padding: 5px 15px; display: flex; justify-content: flex-end; align-items: center;">

@@ -2,6 +2,7 @@ import { Component, Inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { UserService } from '../user.service';
+import { ChangeDetectorRef } from '@angular/core';
 
 @Component({
   standalone: true,
@@ -20,10 +21,12 @@ export class Authorization {
   showPasswordError: boolean = false;
   serverError: string = '';
   isLoading: boolean = false;
+  showLoginNotFoundError: boolean = false;
 
   constructor(
     private router: Router,
-    private userService: UserService
+    private userService: UserService,
+    private cdr: ChangeDetectorRef
   ) {}
 
   togglePasswordVisibility() {
@@ -35,6 +38,9 @@ export class Authorization {
   }
 
   onClearField(field: string) {
+    if (field === 'nickname') {
+      this.showLoginNotFoundError = false;
+    }
     if (field === 'password') {
       this.showPasswordError = false;
     }
@@ -47,7 +53,7 @@ export class Authorization {
   }
 
   getNicknameBorderColor(): string {
-    if (this.showEmptyFieldsError && !this.nickname) return 'red';
+    if ((this.showEmptyFieldsError && !this.nickname) || this.showLoginNotFoundError) return 'red';
     return '#ccc';
   }
 
@@ -60,6 +66,7 @@ export class Authorization {
   onLogin() {
     this.showEmptyFieldsError = false;
     this.showPasswordError = false;
+    this.showLoginNotFoundError = false;
     this.serverError = '';
 
     if (this.isEmptyFields) {
@@ -69,25 +76,30 @@ export class Authorization {
 
     this.isLoading = true;
 
-    // Вызываем метод логина из UserService
-    this.userService.login(this.nickname, this.password);
-    
-    // Подписываемся на ошибки
     const errorSub = this.userService.errors.subscribe((error: any) => {
       this.isLoading = false;
-      if (error.status === 401) {
-        this.serverError = 'Неверный логин или пароль';
+      console.log('Ошибка получена:', error);
+      console.log('Статус ошибки:', error.status);
+      if (error.status === 404) {
+        this.showLoginNotFoundError = true;
+        this.showPasswordError = false;
+      } else if (error.status === 401) {
+        this.showPasswordError = true;
+        this.showLoginNotFoundError = false;
       } else {
         this.serverError = 'Ошибка сервера. Попробуйте позже.';
       }
+      this.cdr.detectChanges();
       errorSub.unsubscribe();
     });
 
-    // Если логин успешный — isLoading выключится при переходе
+    this.userService.login(this.nickname, this.password);
+    
     setTimeout(() => {
       if (this.isLoading) {
         this.isLoading = false;
+        this.serverError = 'Превышено время ожидания';
       }
-    }, 5000);
+    }, 10000);
   }
 }

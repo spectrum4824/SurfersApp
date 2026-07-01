@@ -26,6 +26,11 @@
             >×</span>
           }
         </div>
+        @if (showLoginNotFoundError) {
+          <div style="color: red; font-size: 14px; margin-top: 4px; text-align: center;">
+            Такого аккаунта не существует
+          </div>
+        }
       </div>
 
       <!-- Поле Пароль -->
@@ -53,7 +58,7 @@
           }
         </div>
         @if (showPasswordError) {
-          <div style="color: red; font-size: 16px; margin-top: 4px;">
+          <div style="color: red; font-size: 16px; margin-top: 4px; text-align: center;">
             Пароль неверный
           </div>
         }

@@ -26,13 +26,19 @@ public class RegisterController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> Register([FromForm] RegisterDto registerDto)
     {
-        // Проверка дубликатов
-        var existingUser = await _context.Users
-            .FirstOrDefaultAsync(u => u.Mail == registerDto.Email || u.Nickname == registerDto.Nickname);
+        // Проверка занятости никнейма
+        var existingNickname = await _context.Users
+            .FirstOrDefaultAsync(u => u.Nickname == registerDto.Nickname);
 
-        if (existingUser != null)
-            return Conflict(new { message = "Пользователь с таким email или никнеймом уже существует" });
+        if (existingNickname != null)
+            return Conflict(new { message = "Такой никнейм уже занят", field = "nickname" });
 
+        // Проверка занятости почты
+        var existingEmail = await _context.Users
+            .FirstOrDefaultAsync(u => u.Mail == registerDto.Email);
+
+        if (existingEmail != null)
+            return Conflict(new { message = "Такая почта уже зарегистрирована", field = "email" });
         // Сохраняем аватар если загружен
         string? avatarFileName = null;
         if (registerDto.AvatarFile != null)

@@ -24,12 +24,20 @@ public class LoginController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> Login([FromBody] LoginDto loginDto)
     {
+        // Сначала проверяем существует ли пользователь
+        var userExists = await _context.Users
+            .AnyAsync(u => u.Mail == loginDto.Login || u.Nickname == loginDto.Login);
+    
+        if (!userExists)
+            return NotFound(new { message = "Такого аккаунта не существует" });
+
+        // Потом проверяем пароль
         var user = await _context.Users
             .FirstOrDefaultAsync(u => (u.Mail == loginDto.Login || u.Nickname == loginDto.Login) 
-                                       && u.Password == loginDto.Password);
+                                   && u.Password == loginDto.Password);
 
         if (user == null)
-            return Unauthorized(new { message = "Неверный логин или пароль" });
+            return Unauthorized(new { message = "Пароль неверный" });
 
         return Ok(new { userId = user.Id, nickname = user.Nickname, photo = user.Photo });
     }

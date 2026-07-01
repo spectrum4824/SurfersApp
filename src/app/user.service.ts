@@ -30,14 +30,21 @@ export class UserService {
 
     this.http.post(this.baseUrl + '/Login', body).subscribe({
       next: (user: any) => {
-        const authData = window.btoa(login + ':' + password);
         const photoUrl = user.photo ? `http://localhost:5001/static/img/${user.photo}` : '';
+        let authData = '';
+        try {
+          authData = window.btoa(unescape(encodeURIComponent(login + ':' + password)));
+        } catch (e) {
+          console.warn('btoa failed, using empty authData');
+        }
         const userInfo: UserInfo = { login: login, photo: photoUrl, authData: authData };
         localStorage.setItem('userInfo', JSON.stringify(userInfo));
         localStorage.setItem('isAuthenticated', 'true');
 
         this.authChanged.emit();
-        this.router.navigate(['/newsfeed']);
+        setTimeout(() => {
+          this.router.navigate(['/newsfeed']);
+        }, 100);
       },
       error: (e: any) => {
         this.errors.emit(e);

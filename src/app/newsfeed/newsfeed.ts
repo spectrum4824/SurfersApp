@@ -1,5 +1,8 @@
-import { Component, ViewChild, ElementRef } from '@angular/core';
+import { Component, ViewChild, ElementRef, OnInit, Inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { HttpClient } from '@angular/common/http';
+import { UserService } from '../user.service';
+import { ChangeDetectorRef } from '@angular/core';
 
 interface Post {
   id: number;
@@ -19,43 +22,88 @@ interface Post {
   templateUrl: './newsfeed.html',
   styleUrl: './newsfeed.css'
 })
-export class NewsFeed {
+export class NewsFeed implements OnInit {
   @ViewChild('postFileInput') postFileInput!: ElementRef;
   
-  isLoggedIn: boolean = true;
+  isLoggedIn: boolean = false;
 
   newPostText: string = '';
   newPostImagePath: string = '';
   newPostImagePreview: string = '';
-  nextId: number = 3;
+  selectedFile: File | null = null;
+
+  posts: Post[] = [];
+  isLoading: boolean = false;
 
   get canAddPost(): boolean {
-    return this.newPostText.trim().length > 0 || 
-           !!this.newPostImagePreview || 
-           this.newPostImagePath.trim().length > 0;
+    return this.newPostText.trim().length > 0 || !!this.selectedFile;
   }
 
-  posts: Post[] = [
-    {
-      id: 1,
-      author: 'Enotovod',
-      avatar: 'https://i.pinimg.com/236x/13/fa/a6/13faa6b477fb99e0ee8303c812819ed9.jpg',
-      date: '13.06.2019 в 20:15',
-      text: 'Sample text Sample text Sample text Sample text Sample text Sample text Sample text Sample text Sample text Sample text Sample text Sample text Sample text.',
-      image: 'https://img.redbull.com/images/q_auto,f_auto/redbullcom/2015/06/16/1331729713294_2/5-%D1%81%D0%B0%D0%BC%D1%8B%D1%85-%D0%B7%D1%80%D0%B5%D0%BB%D0%B8%D1%89%D0%BD%D1%8B%D1%85-%D0%B2%D0%B0%D0%B9%D0%BF%D0%B0%D1%83%D1%82%D0%BE%D0%B2-%D0%B3%D0%BE%D0%B4%D0%B0.jpg', likes: 100,
-      isLiked: false
-    },
-    {
-      id: 2,
-      author: 'SurferGirl',
-      avatar: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT4Y9xHnB991npVGde0Nv54pSMh5Ce3HwDBmQ&s',
-      date: '14.06.2019 в 10:30',
-      text: 'Поймала отличную волну сегодня!',
-      image: '',
-      likes: 42,
-      isLiked: true
-    }
-  ];
+  constructor(
+    private http: HttpClient,
+    @Inject('BASE_API_URL') private baseUrl: string,
+    private userService: UserService,
+    private cdr: ChangeDetectorRef
+  ) {}
+
+  ngOnInit() {
+    this.isLoggedIn = this.userService.isAuthenticated();
+    
+    // Подписка на изменения авторизации
+    this.userService.authChanged.subscribe(() => {
+      this.isLoggedIn = this.userService.isAuthenticated();
+    });
+    
+    // Загружаем посты
+    this.loadPosts();
+  }
+
+  loadPosts() {
+    this.isLoading = true;
+    this.http.get(this.baseUrl + '/Posts').subscribe({
+      next: (data: any) => {
+        console.log('Посты загружены:', data);
+        this.posts = [...data.map((p: any) => {
+          // Формируем URL аватарки
+          let avatarUrl = ''; // заглушка по умолчанию
+          if (p.avatar) {
+            if (p.avatar.startsWith('http')) {
+              avatarUrl = p.avatar; // полный URL
+            } else {
+              avatarUrl = `http://localhost:5001/static/img/${p.avatar}`; // локальный файл
+            }
+          }
+          
+          // Формируем URL картинки поста
+          let imageUrl = '';
+          if (p.image) {
+            if (p.image.startsWith('http')) {
+              imageUrl = p.image; // полный URL
+            } else {
+              imageUrl = `http://localhost:5001/static/img/${p.image}`; // локальный файл
+            }
+          }
+          
+          return {
+            id: p.id,
+            author: p.author,
+            avatar: avatarUrl,
+            date: new Date(p.date).toLocaleDateString('ru-RU') + ' в ' + new Date(p.date).toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' }),
+            text: p.text,
+            image: imageUrl,
+            likes: p.likes,
+            isLiked: false
+          };
+        })];
+        this.cdr.detectChanges();
+        this.isLoading = false;
+      },
+      error: (err) => {
+        console.error('Ошибка загрузки постов:', err);
+        this.isLoading = false;
+      }
+    });
+  }
 
   triggerPostFileInput() {
     this.postFileInput.nativeElement.click();
@@ -65,10 +113,13 @@ export class NewsFeed {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length > 0) {
       const file = input.files[0];
+      this.selectedFile = file;
       this.newPostImagePath = file.name;
+      
       const reader = new FileReader();
       reader.onload = (e) => {
         this.newPostImagePreview = e.target?.result as string;
+        this.cdr.detectChanges();
       };
       reader.readAsDataURL(file);
     }
@@ -76,47 +127,42 @@ export class NewsFeed {
 
   addPost() {
     if (!this.canAddPost) return;
-    
-    const now = new Date();
-    const dateStr = now.toLocaleDateString('ru-RU') + ' в ' + now.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
 
-    // Определяем источник картинки
-    let imageToUse = '';
-    
-    if (this.newPostImagePreview) {
-      // Если выбран файл - используем base64
-      imageToUse = this.newPostImagePreview;
-    } else if (this.newPostImagePath.trim()) {
-      // Если введен путь - используем его как есть (для assets или URL)
-      imageToUse = this.newPostImagePath.trim();
+    const formData = new FormData();
+    formData.append('Text', this.newPostText);
+    if (this.selectedFile) {
+      formData.append('ImageFile', this.selectedFile);
     }
 
-    const newPost: Post = {
-      id: this.nextId++,
-      author: 'Nikolpix',
-      avatar: 'https://i.pravatar.cc/40?img=3',
-      date: dateStr,
-      text: this.newPostText,
-      image: imageToUse,
-      likes: 0,
-      isLiked: false
-    };
-
-    console.log('New post image:', imageToUse);
-
-    this.posts.unshift(newPost);
-    this.newPostText = '';
-    this.newPostImagePath = '';
-    this.newPostImagePreview = '';
+    this.http.post(this.baseUrl + '/Posts', formData).subscribe({
+      next: () => {
+        // После добавления перезагружаем список
+        this.loadPosts();
+        this.newPostText = '';
+        this.newPostImagePath = '';
+        this.newPostImagePreview = '';
+        this.selectedFile = null;
+      },
+      error: (err) => {
+        console.error('Ошибка добавления поста:', err);
+      }
+    });
   }
 
   toggleLike(post: Post) {
     post.isLiked = !post.isLiked;
     post.likes += post.isLiked ? 1 : -1;
+    this.cdr.detectChanges();
   }
 
   onImageError(event: Event) {
     const img = event.target as HTMLImageElement;
-    img.style.display = 'none';
+    img.style.display = 'none'; // скрываем битую картинку в посте
   }
+
+  onAvatarError(event: Event) {
+    const img = event.target as HTMLImageElement;
+    img.src = 'https://i.pinimg.com/236x/1a/a4/ce/1aa4cedee524828a8ac40cb77adfa233.jpg'; // заглушка для аватара
+  }
+  
 }

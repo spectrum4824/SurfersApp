@@ -51,6 +51,11 @@ public class PostsController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> AddPost([FromForm] PostDto postDto)
     {
+        // Получаем ID авторизованного пользователя
+        var userId = HttpContext.Items["UserId"] as int?;
+        if (userId == null)
+            return Unauthorized(new { message = "Не авторизован" });
+
         string? imageFileName = null;
 
         if (postDto.ImageFile != null)
@@ -60,7 +65,7 @@ public class PostsController : ControllerBase
 
         var post = new Post
         {
-            UserID = 4,
+            UserID = userId.Value,
             Date = DateTime.Now,
             Text = postDto.Text,
             Image = imageFileName,
@@ -95,7 +100,7 @@ public class PostsController : ControllerBase
 public class PostDto
 {
     /// <summary>Текст поста</summary>
-    public string Text { get; set; } = string.Empty;
+    public string? Text { get; set; }
     
     /// <summary>Файл изображения (необязательно)</summary>
     public IFormFile? ImageFile { get; set; }

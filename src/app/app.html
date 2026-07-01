@@ -15,7 +15,7 @@
     @if (!isLoginPage && !isRegistrationPage && isLoggedIn) {
       <div style="width: 2px; background: #5D98DE; height: 100%;"></div>
       <div style="display: flex; align-items: center; padding: 0 15px; gap: 10px; height: 100%;">
-        <img [src]="userInfo?.photo || 'https://i.pravatar.cc/32?img=3'" style="width: 32px; height: 32px; border-radius: 50%; object-fit: cover;">
+        <img [src]="userInfo?.photo" (error)="onAvatarError($event)" style="width: 32px; height: 32px; border-radius: 50%; object-fit: cover;">
         <span style="color: black; font-size: 14px;">{{ userInfo?.login }}</span>
       </div>
       

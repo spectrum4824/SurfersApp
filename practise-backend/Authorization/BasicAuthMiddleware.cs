@@ -32,7 +32,8 @@ public class BasicAuthMiddleware
             if (authHeader.Parameter != null)
             {
                 var credentialBytes = Convert.FromBase64String(authHeader.Parameter);
-                var credentials = Encoding.UTF8.GetString(credentialBytes).Split(':', 2);
+                var decoded = System.Net.WebUtility.UrlDecode(Encoding.UTF8.GetString(credentialBytes));
+                var credentials = decoded.Split(':', 2);
                 var username = credentials[0];
                 var password = credentials[1];
 

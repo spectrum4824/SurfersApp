@@ -191,19 +191,26 @@ export class Registration {
       next: (user: any) => {
         this.isLoading = false;
         console.log('Регистрация успешна:', user);
-        
-        // После регистрации сразу логинимся
+        // Вызываем логин, он сам перекинет
         this.userService.login(this.nickname, this.password);
       },
+      
       error: (error: any) => {
         this.isLoading = false;
         console.error('Ошибка регистрации:', error);
-        
+    
         if (error.status === 409) {
-          this.serverError = 'Пользователь с таким email или никнеймом уже существует';
+          if (error.error?.field === 'nickname') {
+            this.showNicknameTakenError = true;
+          } else if (error.error?.field === 'email') {
+            this.showEmailTakenError = true;
+          } else {
+            this.serverError = 'Пользователь уже существует';
+          }
         } else {
           this.serverError = 'Ошибка сервера. Попробуйте позже.';
         }
+        this.cdr.detectChanges();
       }
     });
   }
